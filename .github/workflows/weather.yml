@@ -1,0 +1,28 @@
+name: Daily Weather Bot
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Runs at 7 AM Pakistan Time (UTC+5 = 2 AM UTC)
+  workflow_dispatch:  # Optional: allows manual trigger
+
+jobs:
+  send-weather:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run weather bot
+        env:
+          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python weather_bot.py
